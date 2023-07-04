@@ -11,13 +11,13 @@ const Form = () => {
     }
 
     return (
-        <form action="#" onSubmit={handleSubmit} className="relative flex w-full mx-auto max-w-[24rem]">
+        <form action="#" onSubmit={handleSubmit} className="relative flex w-full mx-auto max-w-[52rem] px-2">
             <Input
                 type="text"
                 label="Search Book"
                 value={book}
                 onChange={e => setBook(e.target.value)}
-                className="pr-20 text-white"
+                className="pr-20"
                 containerProps={{
                     className: "min-w-0",
                 }}
@@ -27,7 +27,7 @@ const Form = () => {
                 size="sm"
                 color={book ? "blue" : "blue-gray"}
                 disabled={!book}
-                className="!absolute right-1 top-1 rounded"
+                className="!absolute right-3 top-1 rounded"
             >
                 Search
             </Button>
