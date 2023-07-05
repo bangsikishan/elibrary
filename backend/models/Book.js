@@ -9,6 +9,10 @@ const bookSchema = new Schema({
     author: {
         type: String,
         required: true
+    },
+    path: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 
