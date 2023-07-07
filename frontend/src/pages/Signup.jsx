@@ -1,13 +1,17 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Input,
     Button
 } from "@material-tailwind/react";
 
 const Signup = () => {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +32,19 @@ const Signup = () => {
 
         const data = await response.json();
 
-        console.log(data);
+        if(data.error) {
+            setError(data.error);
+        }
+        else {
+            setError('');
+
+            setUsername('');
+            setEmail('');
+            setPassword('');
+
+            navigate('/login');
+        }
+
     }
 
 
@@ -60,7 +76,9 @@ const Signup = () => {
                     onChange={e => setPassword(e.target.value)} 
                     required 
                 />
+                {error ? <p className='text-xs text-red-600'>{error}</p> : <></>}
                 <Button type="submit">Signup</Button>
+                
             </form>
         </div>
     );
