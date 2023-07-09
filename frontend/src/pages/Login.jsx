@@ -3,10 +3,16 @@ import {
     Input,
     Button
 } from "@material-tailwind/react";
+import { useDispatch } from 'react-redux';
+
+import { login } from '../features/auth/authSlice';
 
 const Login = () => {
+    const dispatch = useDispatch();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,7 +32,18 @@ const Login = () => {
 
         const data = await response.json();
 
-        console.log(data);
+        if(data.error) {
+            setError(data.error);
+        }
+        else {
+            setError('');
+
+            setUsername('');
+            setPassword('');
+
+            dispatch(login(data));
+            navigate('/');
+        }
     }
 
     return (
@@ -49,6 +66,7 @@ const Login = () => {
                     onChange={e => setPassword(e.target.value)} 
                     required 
                 />
+                {error ? <p className='text-xs text-red-600'>{error}</p> : <></>}
                 <Button type="submit">Login</Button>
             </form>
         </div>
