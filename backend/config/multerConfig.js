@@ -1,36 +1,27 @@
 const multer = require('multer');
 
-const newFilename = null;
 const storage = multer.diskStorage({
-    destination: './uploads',
+    destination: function(req, file, cb) {
+        cb(null, './uploads')
+    },
     filename: function(req, file, cb) {
-        newFilename = file.filename + '-' + Date.now() + path.extname(file.originalname);
+        const ext = file.mimetype.split("/")[1];
+        const newFilename = file.originalname + '-' + Date.now() + '.' + ext;
         cb(null, newFilename);
     }
 });
 
-function checkFileType(file, cb) {
-    const allowedFileType = /pdf/;
-    const extname = allowedFileType.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedFileType.test(file.mimetype);
-
-    if (mimetype && extname) {
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.split("/")[1] === "pdf") {
         cb(null, true);
     } else {
-        cb('Error: PDF files only!');
+        cb(new Error("Error: PDF files only!"), false);
     }
-}
+};
 
 const upload = multer({
     storage: storage,
-    fileFilter: async function(req, file, cb) {
-        try {
-            checkFileType(file);
-            cb(null, true);
-        } catch (err) {
-            cb(err);
-        }
-    }
+    fileFilter: multerFilter
 });
 
-module.exports = { upload, newFilename };
+module.exports = { upload };
