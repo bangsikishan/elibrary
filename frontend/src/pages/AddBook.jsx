@@ -3,26 +3,42 @@ import {
     Input,
     Button
 } from "@material-tailwind/react";
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 
 const AddBook = () => {
-    const user = useSelector((state) => {
-        return state.auth.user; 
-    });
-
     const [book, setBook] = useState('');
     const [author, setAuthor] = useState('');
     const [pdf, setPdf] = useState('');
     const [error, setError] = useState('');
 
+    const onFileChange = (e) => {
+        setPdf(e.target.files[0]);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const sanitizedInput = {
-            book: book.trim(),
-            author: author.trim()
-        };
+        const formData = new FormData();
+        formData.append('book', book.trim());
+        formData.append('author', author.trim());
+        formData.append('pdf', pdf);
+
+        const response = await fetch('http://localhost:3000/add', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if(data.error) {
+            setError(data.error);
+        }
+        else {
+            setError('');
+            
+            setBook('');
+            setAuthor('');
+            setPdf('');
+        }
     }
 
     return (
@@ -48,8 +64,8 @@ const AddBook = () => {
                 <input 
                     type="file" 
                     name="pdf" 
-                    value={pdf} 
-                    onChange={e => setPdf(e.target.value)} 
+                    onChange={onFileChange} 
+                    accept=".pdf" 
                     className='class="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
