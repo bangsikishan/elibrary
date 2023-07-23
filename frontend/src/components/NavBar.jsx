@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { useLogout } from '../hooks/useLogout';
 
 const Navbar = () => {
-    const dispatch = useDispatch();
+    const [showNav, setShowNav] = useState(false);
 
     const {userName, user} = useSelector((state) => {
         return state.auth;
     });
+    
+    const { logOut } = useLogout();
 
-    const [showNav, setShowNav] = useState(false);
+    const handleLogout = () => {
+        logOut();
+    }
 
     return (
         <nav className='relative flex items-center justify-between h-14 border-b border-gray-500 px-8 sm:px-16 md:px-28'>
@@ -33,7 +37,7 @@ const Navbar = () => {
                     ) : (
                         <>
                             <li className='hover:underline'><NavLink to="/add-book">Add</NavLink></li>
-                            <button className='hover:underline' onClick={() => dispatch(logout({userName, user}))}>Logout</button>
+                            <button className='hover:underline' onClick={handleLogout}>Logout</button>
                         </>
                     )}
                 </ul>
@@ -51,7 +55,7 @@ const Navbar = () => {
                         ) : (
                             <>
                                 <li className='hover:underline'><NavLink to="/add-book">Add</NavLink></li>
-                                <button className='hover:underline' onClick={() => dispatch(logout({userName, user}))}>Logout</button>
+                                <button className='hover:underline' onClick={handleLogout}>Logout</button>
                             </>
                         )}
                     </ul>
