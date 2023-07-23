@@ -3,50 +3,19 @@ import {
     Input,
     Button
 } from "@material-tailwind/react";
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
-import { login } from '../features/auth/authSlice';
+import { useLogin } from '../hooks/useLogin';
 
 const Login = () => {
-    const navigate = useNavigate();
-    
-    const dispatch = useDispatch();
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+
+    const {error, logIn} = useLogin();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const sanitizedCredentials = {
-            username: username.trim(),
-            password: password.trim()
-        }
-
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(sanitizedCredentials)
-        });
-
-        const data = await response.json();
-
-        if(data.error) {
-            setError(data.error);
-        }
-        else {
-            setError('');
-
-            setUsername('');
-            setPassword('');
-
-            dispatch(login(data));
-            navigate('/');
-        }
+        await logIn(username, password);
     }
 
     return (
