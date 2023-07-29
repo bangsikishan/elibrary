@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
     Input,
     Button
@@ -9,6 +11,10 @@ const AddBook = () => {
     const [author, setAuthor] = useState('');
     const [pdf, setPdf] = useState('');
     const [error, setError] = useState('');
+
+    const { user } = useSelector((state) => {
+        return state.auth;
+    });
 
     const onFileChange = (e) => {
         setPdf(e.target.files[0]);
@@ -41,7 +47,7 @@ const AddBook = () => {
         }
     }
 
-    return (
+    return user ? (
         <div className="py-28">
             <h1 className="text-center font-bold text-gray-800 mb-6 text-2xl md:text-3xl">Add Book</h1>
             <form action="#" encType='multipart/form-data' className="max-w-[30rem] space-y-6 mx-auto px-2" onSubmit={handleSubmit}>
@@ -78,6 +84,8 @@ const AddBook = () => {
                 <Button type="submit">Add Book</Button>
             </form>
         </div>
+    ) : (
+        <Navigate to='/login' />
     );
 }
  

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
     Input,
     Button
@@ -10,6 +12,10 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const { user } = useSelector((state) => {
+        return state.auth;
+    });
+
     const {error, logIn} = useLogin();
 
     const handleSubmit = async (e) => {
@@ -18,7 +24,7 @@ const Login = () => {
         await logIn(username, password);
     }
 
-    return (
+    return !user ? (
         <div className="py-28">
             <h1 className="text-center font-bold text-gray-800 mb-6 text-2xl md:text-3xl">Login</h1>
             <form action="#" className="max-w-[30rem] space-y-6 mx-auto px-2" onSubmit={handleSubmit}>
@@ -42,6 +48,8 @@ const Login = () => {
                 <Button type="submit">Login</Button>
             </form>
         </div>
+    ) : (
+        <Navigate to='/' />
     );
 }
  

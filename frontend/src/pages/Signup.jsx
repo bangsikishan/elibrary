@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
     Input,
     Button
@@ -8,6 +10,10 @@ import { useSignup } from '../hooks/useSignup';
 
 const Signup = () => {
     const {error: signupError, signUp} = useSignup();
+
+    const { user } = useSelector((state) => {
+        return state.auth;
+    });
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -20,7 +26,7 @@ const Signup = () => {
     }
 
 
-    return (
+    return !user ? (
         <div className="py-28">
             <h1 className="text-center font-bold text-gray-800 mb-6 text-2xl md:text-3xl">Signup</h1>
             <form action="#" className="max-w-[30rem] space-y-6 mx-auto px-2" onSubmit={handleSubmit}>
@@ -53,6 +59,8 @@ const Signup = () => {
                 
             </form>
         </div>
+    ) : (
+        <Navigate to='/' />
     );
 }
  
