@@ -1,50 +1,22 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
     Input,
     Button
 } from "@material-tailwind/react";
 
+import { useSignup } from '../hooks/useSignup';
+
 const Signup = () => {
-    const navigate = useNavigate();
+    const {error: signupError, signUp} = useSignup();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const sanitizedCredentials = {
-            username: username.trim(),
-            email: email.trim(),
-            password: password.trim()
-        }
-
-        const response = await fetch('http://localhost:3000/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(sanitizedCredentials)
-        });
-
-        const data = await response.json();
-
-        if(data.error) {
-            setError(data.error);
-        }
-        else {
-            setError('');
-
-            setUsername('');
-            setEmail('');
-            setPassword('');
-
-            navigate('/login');
-        }
-
+        await signUp(username, email, password);
     }
 
 
@@ -76,7 +48,7 @@ const Signup = () => {
                     onChange={e => setPassword(e.target.value)} 
                     required 
                 />
-                {error ? <p className='text-xs text-red-600'>{error}</p> : <></>}
+                {signupError ? <p className='text-xs text-red-600'>{signupError}</p> : <></>}
                 <Button type="submit">Signup</Button>
                 
             </form>

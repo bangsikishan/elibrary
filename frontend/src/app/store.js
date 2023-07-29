@@ -8,7 +8,7 @@ const storedUsername = localStorage.getItem('username');
 const initialAuthState = {
     userName: storedUsername,
     user: storedUserToken,
-  };
+};
 
 const store = configureStore({
     reducer: {
